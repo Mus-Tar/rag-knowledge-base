@@ -1,0 +1,20 @@
+[project]
+name = "rag-web"
+version = "0.1.0"
+description = "Streamlit frontend for the local knowledge base"
+requires-python = ">=3.12,<3.14"
+dependencies = [
+  "httpx>=0.28,<1",
+  "pydantic-settings>=2.10,<3",
+  "streamlit>=1.47,<2",
+]
+
+[project.scripts]
+rag-web = "rag_web.main:run"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/rag_web"]

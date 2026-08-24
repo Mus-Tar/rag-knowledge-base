@@ -1,0 +1,6 @@
+{$RAG_DOMAIN} {
+    basic_auth {
+        {$RAG_CADDY_BASIC_AUTH}
+    }
+    reverse_proxy web:8501
+}

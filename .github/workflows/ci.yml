@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+          enable-cache: true
+      - run: uv sync --all-packages --dev --frozen
+      - run: uv run ruff format --check .
+      - run: uv run ruff check .
+      - run: uv run pytest -m "not e2e" --cov --cov-report=term-missing --cov-report=xml
+      - run: docker compose config --quiet
+      - name: Build and start application stack
+        run: docker compose up --detach --build --wait --wait-timeout 180
+      - name: Run container E2E workflow
+        env:
+          RAG_E2E_API_URL: http://127.0.0.1:8000
+          RAG_E2E_WEB_URL: http://127.0.0.1:8501
+        run: uv run pytest -m e2e
+      - name: Run fixed retrieval evaluation
+        run: uv run python evaluation/run_evaluation.py --api-url http://127.0.0.1:8000 --web-url http://127.0.0.1:8501 --output evaluation/results/ci-${{ github.run_id }}.json
+      - name: Upload evaluation result
+        uses: actions/upload-artifact@v4
+        with:
+          name: rag-evaluation-${{ github.run_id }}
+          path: evaluation/results/ci-${{ github.run_id }}.json
+          if-no-files-found: error
+      - name: Show container logs on failure
+        if: failure()
+        run: docker compose logs --no-color
+      - name: Stop application stack
+        if: always()
+        run: docker compose down --volumes --remove-orphans

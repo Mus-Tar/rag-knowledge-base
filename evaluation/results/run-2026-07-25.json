@@ -1,0 +1,517 @@
+{
+  "schema_version": 1,
+  "run_id": "1850e225c4c14accaf9810f550387e05",
+  "started_at": "2026-07-25T07:25:34.499695+00:00",
+  "finished_at": "2026-07-25T07:25:39.432312+00:00",
+  "environment": {
+    "python": "3.12.0",
+    "platform": "Windows-11-10.0.26100-SP0",
+    "api_url": "http://127.0.0.1:8000",
+    "web_url": "http://127.0.0.1:8501",
+    "model_provider": "fake",
+    "retrieval_vector": "384-dimensional normalized lexical feature hash"
+  },
+  "dataset": {
+    "name": "rag-resume-evidence-v1",
+    "schema_version": 1,
+    "sha256": "6bae4ebf532c8ed437b272efcf69cea357b2e89fafa4a143d5b340f21684bb70",
+    "document_count": 10,
+    "question_count": 20
+  },
+  "summary": {
+    "hit_at_1": 0.85,
+    "hit_at_4": 1.0,
+    "mrr_at_4": 0.9167,
+    "qa_keyword_pass_rate": 0.85,
+    "question_count": 20,
+    "upload_p95_ms": 76.2,
+    "first_token_p95_ms": 36.04,
+    "answer_total_p95_ms": 135.08
+  },
+  "retrieval": {
+    "hit_at_1": 0.85,
+    "hit_at_4": 1.0,
+    "mrr_at_4": 0.9167
+  },
+  "qa": {
+    "keyword_passes": 17,
+    "keyword_pass_rate": 0.85,
+    "scope": "Deterministic fake-provider pipeline validation, not LLM answer quality"
+  },
+  "performance": {
+    "upload_ms": {
+      "min": 51.63,
+      "p50": 67.21,
+      "p95": 76.2,
+      "max": 76.2,
+      "mean": 65.7,
+      "samples": 10
+    },
+    "health_ms": {
+      "min": 4.06,
+      "p50": 8.27,
+      "p95": 36.85,
+      "max": 41.57,
+      "mean": 16.29,
+      "samples": 30
+    },
+    "first_token_ms": {
+      "min": 11.53,
+      "p50": 21.71,
+      "p95": 36.04,
+      "max": 37.53,
+      "mean": 22.69,
+      "samples": 20
+    },
+    "answer_total_ms": {
+      "min": 107.32,
+      "p50": 119.91,
+      "p95": 135.08,
+      "max": 139.23,
+      "mean": 120.12,
+      "samples": 20
+    }
+  },
+  "queries": [
+    {
+      "id": "q01",
+      "question": "Which Python context manager methods acquire and release a resource?",
+      "relevant_filename": "python-context.pdf",
+      "retrieved_filenames": [
+        "python-context.pdf",
+        "rag-retrieval.pdf",
+        "streamlit-state.pdf",
+        "sha256-dedup.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "__enter__",
+        "__exit__"
+      ],
+      "matched_terms": [
+        "__enter__",
+        "__exit__"
+      ],
+      "first_token_ms": 13.02,
+      "total_ms": 111.03
+    },
+    {
+      "id": "q02",
+      "question": "Which decorator creates a context manager from a generator?",
+      "relevant_filename": "python-context.pdf",
+      "retrieved_filenames": [
+        "python-context.pdf",
+        "sse-streaming.pdf",
+        "sqlite-durability.pdf",
+        "streamlit-state.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "contextlib.contextmanager"
+      ],
+      "matched_terms": [
+        "contextlib.contextmanager"
+      ],
+      "first_token_ms": 36.04,
+      "total_ms": 130.26
+    },
+    {
+      "id": "q03",
+      "question": "What does FastAPI Depends provide to path operations?",
+      "relevant_filename": "fastapi-dependencies.pdf",
+      "retrieved_filenames": [
+        "fastapi-dependencies.pdf",
+        "github-actions.pdf",
+        "sqlite-durability.pdf",
+        "docker-compose.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "dependency injection",
+        "shared services"
+      ],
+      "matched_terms": [
+        "dependency injection",
+        "shared services"
+      ],
+      "first_token_ms": 28.21,
+      "total_ms": 119.86
+    },
+    {
+      "id": "q04",
+      "question": "How can FastAPI integration tests replace production dependencies?",
+      "relevant_filename": "fastapi-dependencies.pdf",
+      "retrieved_filenames": [
+        "fastapi-dependencies.pdf",
+        "github-actions.pdf",
+        "docker-compose.pdf",
+        "rag-retrieval.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "dependency overrides"
+      ],
+      "matched_terms": [
+        "dependency overrides"
+      ],
+      "first_token_ms": 11.55,
+      "total_ms": 110.43
+    },
+    {
+      "id": "q05",
+      "question": "Which SQLite journal mode allows readers and a writer concurrently?",
+      "relevant_filename": "sqlite-durability.pdf",
+      "retrieved_filenames": [
+        "sqlite-durability.pdf",
+        "python-context.pdf",
+        "chroma-persistence.pdf",
+        "streamlit-state.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "WAL"
+      ],
+      "matched_terms": [
+        "WAL"
+      ],
+      "first_token_ms": 22.65,
+      "total_ms": 122.0
+    },
+    {
+      "id": "q06",
+      "question": "Which SQLite PRAGMA enables foreign key enforcement?",
+      "relevant_filename": "sqlite-durability.pdf",
+      "retrieved_filenames": [
+        "sqlite-durability.pdf",
+        "python-context.pdf",
+        "rag-retrieval.pdf",
+        "chroma-persistence.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "PRAGMA foreign_keys ON"
+      ],
+      "matched_terms": [
+        "PRAGMA foreign_keys ON"
+      ],
+      "first_token_ms": 21.71,
+      "total_ms": 123.7
+    },
+    {
+      "id": "q07",
+      "question": "How does Docker Compose wait for a dependency to become healthy?",
+      "relevant_filename": "docker-compose.pdf",
+      "retrieved_filenames": [
+        "docker-compose.pdf",
+        "sqlite-durability.pdf",
+        "python-context.pdf",
+        "fastapi-dependencies.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "depends_on",
+        "service_healthy"
+      ],
+      "matched_terms": [
+        "depends_on",
+        "service_healthy"
+      ],
+      "first_token_ms": 33.49,
+      "total_ms": 130.89
+    },
+    {
+      "id": "q08",
+      "question": "What preserves Docker application data across container recreation?",
+      "relevant_filename": "docker-compose.pdf",
+      "retrieved_filenames": [
+        "docker-compose.pdf",
+        "sha256-dedup.pdf",
+        "sse-streaming.pdf",
+        "python-context.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "Named volumes"
+      ],
+      "matched_terms": [
+        "Named volumes"
+      ],
+      "first_token_ms": 12.36,
+      "total_ms": 107.88
+    },
+    {
+      "id": "q09",
+      "question": "What steps occur before retrieved chunks become model context in RAG?",
+      "relevant_filename": "rag-retrieval.pdf",
+      "retrieved_filenames": [
+        "rag-retrieval.pdf",
+        "python-context.pdf",
+        "sha256-dedup.pdf",
+        "sqlite-durability.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "parses documents",
+        "splits text",
+        "retrieves"
+      ],
+      "matched_terms": [
+        "parses documents",
+        "splits text",
+        "retrieves"
+      ],
+      "first_token_ms": 13.05,
+      "total_ms": 107.32
+    },
+    {
+      "id": "q10",
+      "question": "Which fields should structured RAG citations contain?",
+      "relevant_filename": "rag-retrieval.pdf",
+      "retrieved_filenames": [
+        "sha256-dedup.pdf",
+        "rag-retrieval.pdf",
+        "python-context.pdf",
+        "github-actions.pdf"
+      ],
+      "rank": 2,
+      "answer_keyword_pass": false,
+      "expected_terms": [
+        "filename",
+        "page number",
+        "chunk identifier"
+      ],
+      "matched_terms": [
+        "filename"
+      ],
+      "first_token_ms": 12.41,
+      "total_ms": 107.89
+    },
+    {
+      "id": "q11",
+      "question": "Which GitHub Actions events run the continuous integration workflow?",
+      "relevant_filename": "github-actions.pdf",
+      "retrieved_filenames": [
+        "github-actions.pdf",
+        "fastapi-dependencies.pdf",
+        "python-context.pdf",
+        "rag-retrieval.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "push",
+        "pull_request"
+      ],
+      "matched_terms": [
+        "push",
+        "pull_request"
+      ],
+      "first_token_ms": 31.52,
+      "total_ms": 128.72
+    },
+    {
+      "id": "q12",
+      "question": "What should CI collect when a Docker end-to-end step fails?",
+      "relevant_filename": "github-actions.pdf",
+      "retrieved_filenames": [
+        "github-actions.pdf",
+        "sqlite-durability.pdf",
+        "python-context.pdf",
+        "fastapi-dependencies.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "container logs"
+      ],
+      "matched_terms": [
+        "container logs"
+      ],
+      "first_token_ms": 35.37,
+      "total_ms": 127.88
+    },
+    {
+      "id": "q13",
+      "question": "Where does Streamlit preserve the active conversation identifier?",
+      "relevant_filename": "streamlit-state.pdf",
+      "retrieved_filenames": [
+        "streamlit-state.pdf",
+        "sse-streaming.pdf",
+        "rag-retrieval.pdf",
+        "fastapi-dependencies.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "st.session_state"
+      ],
+      "matched_terms": [
+        "st.session_state"
+      ],
+      "first_token_ms": 11.53,
+      "total_ms": 108.34
+    },
+    {
+      "id": "q14",
+      "question": "Which Streamlit widgets collect questions and render chat history?",
+      "relevant_filename": "streamlit-state.pdf",
+      "retrieved_filenames": [
+        "python-context.pdf",
+        "docker-compose.pdf",
+        "streamlit-state.pdf",
+        "sha256-dedup.pdf"
+      ],
+      "rank": 3,
+      "answer_keyword_pass": false,
+      "expected_terms": [
+        "st.chat_input",
+        "st.chat_message"
+      ],
+      "matched_terms": [],
+      "first_token_ms": 12.09,
+      "total_ms": 109.13
+    },
+    {
+      "id": "q15",
+      "question": "Which Chroma client stores vector collections on disk?",
+      "relevant_filename": "chroma-persistence.pdf",
+      "retrieved_filenames": [
+        "chroma-persistence.pdf",
+        "sqlite-durability.pdf",
+        "streamlit-state.pdf",
+        "github-actions.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "PersistentClient"
+      ],
+      "matched_terms": [
+        "PersistentClient"
+      ],
+      "first_token_ms": 35.53,
+      "total_ms": 129.42
+    },
+    {
+      "id": "q16",
+      "question": "What metadata can a Chroma vector carry for source location?",
+      "relevant_filename": "chroma-persistence.pdf",
+      "retrieved_filenames": [
+        "chroma-persistence.pdf",
+        "sqlite-durability.pdf",
+        "python-context.pdf",
+        "github-actions.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "document_id",
+        "page",
+        "chunk_index"
+      ],
+      "matched_terms": [
+        "document_id",
+        "page",
+        "chunk_index"
+      ],
+      "first_token_ms": 27.97,
+      "total_ms": 124.83
+    },
+    {
+      "id": "q17",
+      "question": "How can SHA-256 reject the same document under a different filename?",
+      "relevant_filename": "sha256-dedup.pdf",
+      "retrieved_filenames": [
+        "sha256-dedup.pdf",
+        "python-context.pdf",
+        "fastapi-dependencies.pdf",
+        "sse-streaming.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "content digest",
+        "unique database column"
+      ],
+      "matched_terms": [
+        "content digest",
+        "unique database column"
+      ],
+      "first_token_ms": 12.21,
+      "total_ms": 108.53
+    },
+    {
+      "id": "q18",
+      "question": "When should PDF deduplication happen relative to vector persistence?",
+      "relevant_filename": "sha256-dedup.pdf",
+      "retrieved_filenames": [
+        "fastapi-dependencies.pdf",
+        "sha256-dedup.pdf",
+        "chroma-persistence.pdf",
+        "github-actions.pdf"
+      ],
+      "rank": 2,
+      "answer_keyword_pass": false,
+      "expected_terms": [
+        "before",
+        "vectors"
+      ],
+      "matched_terms": [
+        "before"
+      ],
+      "first_token_ms": 37.53,
+      "total_ms": 139.23
+    },
+    {
+      "id": "q19",
+      "question": "Which media type identifies a Server-Sent Events response?",
+      "relevant_filename": "sse-streaming.pdf",
+      "retrieved_filenames": [
+        "sse-streaming.pdf",
+        "python-context.pdf",
+        "fastapi-dependencies.pdf",
+        "sqlite-durability.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "text/event-stream"
+      ],
+      "matched_terms": [
+        "text/event-stream"
+      ],
+      "first_token_ms": 34.02,
+      "total_ms": 135.08
+    },
+    {
+      "id": "q20",
+      "question": "What allows SSE answer tokens to reach the browser incrementally through a proxy?",
+      "relevant_filename": "sse-streaming.pdf",
+      "retrieved_filenames": [
+        "sse-streaming.pdf",
+        "sqlite-durability.pdf",
+        "python-context.pdf",
+        "docker-compose.pdf"
+      ],
+      "rank": 1,
+      "answer_keyword_pass": true,
+      "expected_terms": [
+        "Disabling proxy buffering"
+      ],
+      "matched_terms": [
+        "Disabling proxy buffering"
+      ],
+      "first_token_ms": 11.55,
+      "total_ms": 119.91
+    }
+  ]
+}

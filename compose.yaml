@@ -1,0 +1,70 @@
+name: rag-knowledge-base
+
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    environment:
+      RAG_APP_ENV: ${RAG_APP_ENV:-development}
+      RAG_LOG_LEVEL: ${RAG_LOG_LEVEL:-INFO}
+      RAG_API_HOST: 0.0.0.0
+      RAG_API_PORT: 8000
+      RAG_DATA_DIR: /app/data
+      RAG_MAX_UPLOAD_BYTES: ${RAG_MAX_UPLOAD_BYTES:-20971520}
+      RAG_MAX_PDF_PAGES: ${RAG_MAX_PDF_PAGES:-200}
+      RAG_CHUNK_SIZE: ${RAG_CHUNK_SIZE:-800}
+      RAG_CHUNK_OVERLAP: ${RAG_CHUNK_OVERLAP:-120}
+      RAG_LLM_PROVIDER: ${RAG_LLM_PROVIDER:-fake}
+      RAG_LLM_MODEL: ${RAG_LLM_MODEL:-}
+      RAG_OPENAI_API_KEY: ${RAG_OPENAI_API_KEY:-}
+      RAG_OPENAI_BASE_URL: ${RAG_OPENAI_BASE_URL:-}
+      RAG_OLLAMA_BASE_URL: ${RAG_OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      RAG_RETRIEVAL_TOP_K: ${RAG_RETRIEVAL_TOP_K:-4}
+    init: true
+    ports:
+      - "${RAG_API_PUBLISHED_PORT:-8000}:8000"
+    volumes:
+      - rag-data:/app/data
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=2)"
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    stop_grace_period: 10s
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    environment:
+      RAG_APP_ENV: ${RAG_APP_ENV:-development}
+      RAG_API_BASE_URL: http://api:8000
+      RAG_HTTP_TIMEOUT_SECONDS: ${RAG_HTTP_TIMEOUT_SECONDS:-5}
+      STREAMLIT_BROWSER_GATHER_USAGE_STATS: "false"
+      STREAMLIT_SERVER_HEADLESS: "true"
+    init: true
+    ports:
+      - "${RAG_WEB_PUBLISHED_PORT:-8501}:8501"
+    depends_on:
+      api:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health', timeout=2)"
+      interval: 10s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    stop_grace_period: 10s
+
+volumes:
+  rag-data:

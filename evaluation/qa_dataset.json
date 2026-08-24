@@ -1,0 +1,178 @@
+{
+  "schema_version": 1,
+  "name": "rag-resume-evidence-v1",
+  "documents": [
+    {
+      "filename": "python-context.pdf",
+      "title": "Python Context Managers",
+      "body": "Python context managers manage setup and cleanup around a with statement. The __enter__ method acquires a resource and __exit__ releases it even when an exception occurs. The contextlib.contextmanager decorator can create a context manager from a generator."
+    },
+    {
+      "filename": "fastapi-dependencies.pdf",
+      "title": "FastAPI Dependency Injection",
+      "body": "FastAPI dependency injection uses Depends to provide shared services to path operations. Pydantic validates request data before the endpoint runs. Dependency overrides make integration tests deterministic without changing production wiring."
+    },
+    {
+      "filename": "sqlite-durability.pdf",
+      "title": "SQLite Durability",
+      "body": "SQLite stores a complete relational database in one file. WAL journal mode allows readers and a writer to operate concurrently. Foreign key enforcement must be enabled for each connection with PRAGMA foreign_keys ON."
+    },
+    {
+      "filename": "docker-compose.pdf",
+      "title": "Docker Compose Operations",
+      "body": "Docker Compose defines multiple services, networks, volumes, and healthchecks in one YAML file. depends_on with service_healthy waits for a dependency healthcheck. Named volumes preserve application data across container recreation."
+    },
+    {
+      "filename": "rag-retrieval.pdf",
+      "title": "Retrieval Augmented Generation",
+      "body": "A RAG pipeline parses documents, splits text into chunks, indexes vectors, retrieves relevant chunks, and supplies them as model context. Structured citations should include the source filename, page number, chunk identifier, and an excerpt."
+    },
+    {
+      "filename": "github-actions.pdf",
+      "title": "GitHub Actions Continuous Integration",
+      "body": "A GitHub Actions workflow can run on push and pull_request events. CI installs locked dependencies, checks formatting, runs static analysis and tests, then starts Docker Compose for end-to-end validation. Failure steps should collect container logs."
+    },
+    {
+      "filename": "streamlit-state.pdf",
+      "title": "Streamlit Conversation State",
+      "body": "Streamlit reruns the page script after each interaction. st.session_state preserves values such as the active conversation identifier across reruns. st.chat_input collects a question and st.chat_message renders user and assistant history."
+    },
+    {
+      "filename": "chroma-persistence.pdf",
+      "title": "Chroma Persistent Collections",
+      "body": "Chroma PersistentClient stores vector collections on disk. Each vector can carry metadata such as document_id, page, and chunk_index. A query returns identifiers, documents, metadata, and distances for the nearest indexed vectors."
+    },
+    {
+      "filename": "sha256-dedup.pdf",
+      "title": "SHA-256 Document Deduplication",
+      "body": "SHA-256 produces a stable content digest for uploaded bytes. Storing the digest in a unique database column rejects duplicate documents even when filenames differ. Deduplication should happen before persistent vectors and files are committed."
+    },
+    {
+      "filename": "sse-streaming.pdf",
+      "title": "Server-Sent Events Streaming",
+      "body": "Server-Sent Events use the text/event-stream media type over a long-lived HTTP response. Each event contains event and data fields separated by a blank line. Disabling proxy buffering allows answer tokens to reach the browser incrementally."
+    }
+  ],
+  "questions": [
+    {
+      "id": "q01",
+      "question": "Which Python context manager methods acquire and release a resource?",
+      "relevant_filename": "python-context.pdf",
+      "expected_answer_terms": ["__enter__", "__exit__"]
+    },
+    {
+      "id": "q02",
+      "question": "Which decorator creates a context manager from a generator?",
+      "relevant_filename": "python-context.pdf",
+      "expected_answer_terms": ["contextlib.contextmanager"]
+    },
+    {
+      "id": "q03",
+      "question": "What does FastAPI Depends provide to path operations?",
+      "relevant_filename": "fastapi-dependencies.pdf",
+      "expected_answer_terms": ["dependency injection", "shared services"]
+    },
+    {
+      "id": "q04",
+      "question": "How can FastAPI integration tests replace production dependencies?",
+      "relevant_filename": "fastapi-dependencies.pdf",
+      "expected_answer_terms": ["dependency overrides"]
+    },
+    {
+      "id": "q05",
+      "question": "Which SQLite journal mode allows readers and a writer concurrently?",
+      "relevant_filename": "sqlite-durability.pdf",
+      "expected_answer_terms": ["WAL"]
+    },
+    {
+      "id": "q06",
+      "question": "Which SQLite PRAGMA enables foreign key enforcement?",
+      "relevant_filename": "sqlite-durability.pdf",
+      "expected_answer_terms": ["PRAGMA foreign_keys ON"]
+    },
+    {
+      "id": "q07",
+      "question": "How does Docker Compose wait for a dependency to become healthy?",
+      "relevant_filename": "docker-compose.pdf",
+      "expected_answer_terms": ["depends_on", "service_healthy"]
+    },
+    {
+      "id": "q08",
+      "question": "What preserves Docker application data across container recreation?",
+      "relevant_filename": "docker-compose.pdf",
+      "expected_answer_terms": ["Named volumes"]
+    },
+    {
+      "id": "q09",
+      "question": "What steps occur before retrieved chunks become model context in RAG?",
+      "relevant_filename": "rag-retrieval.pdf",
+      "expected_answer_terms": ["parses documents", "splits text", "retrieves"]
+    },
+    {
+      "id": "q10",
+      "question": "Which fields should structured RAG citations contain?",
+      "relevant_filename": "rag-retrieval.pdf",
+      "expected_answer_terms": ["filename", "page number", "chunk identifier"]
+    },
+    {
+      "id": "q11",
+      "question": "Which GitHub Actions events run the continuous integration workflow?",
+      "relevant_filename": "github-actions.pdf",
+      "expected_answer_terms": ["push", "pull_request"]
+    },
+    {
+      "id": "q12",
+      "question": "What should CI collect when a Docker end-to-end step fails?",
+      "relevant_filename": "github-actions.pdf",
+      "expected_answer_terms": ["container logs"]
+    },
+    {
+      "id": "q13",
+      "question": "Where does Streamlit preserve the active conversation identifier?",
+      "relevant_filename": "streamlit-state.pdf",
+      "expected_answer_terms": ["st.session_state"]
+    },
+    {
+      "id": "q14",
+      "question": "Which Streamlit widgets collect questions and render chat history?",
+      "relevant_filename": "streamlit-state.pdf",
+      "expected_answer_terms": ["st.chat_input", "st.chat_message"]
+    },
+    {
+      "id": "q15",
+      "question": "Which Chroma client stores vector collections on disk?",
+      "relevant_filename": "chroma-persistence.pdf",
+      "expected_answer_terms": ["PersistentClient"]
+    },
+    {
+      "id": "q16",
+      "question": "What metadata can a Chroma vector carry for source location?",
+      "relevant_filename": "chroma-persistence.pdf",
+      "expected_answer_terms": ["document_id", "page", "chunk_index"]
+    },
+    {
+      "id": "q17",
+      "question": "How can SHA-256 reject the same document under a different filename?",
+      "relevant_filename": "sha256-dedup.pdf",
+      "expected_answer_terms": ["content digest", "unique database column"]
+    },
+    {
+      "id": "q18",
+      "question": "When should PDF deduplication happen relative to vector persistence?",
+      "relevant_filename": "sha256-dedup.pdf",
+      "expected_answer_terms": ["before", "vectors"]
+    },
+    {
+      "id": "q19",
+      "question": "Which media type identifies a Server-Sent Events response?",
+      "relevant_filename": "sse-streaming.pdf",
+      "expected_answer_terms": ["text/event-stream"]
+    },
+    {
+      "id": "q20",
+      "question": "What allows SSE answer tokens to reach the browser incrementally through a proxy?",
+      "relevant_filename": "sse-streaming.pdf",
+      "expected_answer_terms": ["Disabling proxy buffering"]
+    }
+  ]
+}

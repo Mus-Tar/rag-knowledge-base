@@ -1,0 +1,39 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Environments and local configuration
+.venv/
+.env
+.env.*
+!.env.example
+
+# IDE and OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Runtime data
+data/
+*.db
+*.sqlite3
+*.log
+
+# Build output
+build/
+dist/
+
+.env
+data/
+.pytest_cache/
+__pycache__/
+*.pyc
+.coverage
+htmlcov/

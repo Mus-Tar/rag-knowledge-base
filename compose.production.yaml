@@ -1,0 +1,49 @@
+services:
+  api:
+    environment:
+      RAG_APP_ENV: production
+      RAG_DATA_DIR: /app/data
+      RAG_LLM_PROVIDER: ${RAG_LLM_PROVIDER:-ollama}
+      RAG_LLM_MODEL: ${RAG_LLM_MODEL:-qwen3:4b}
+      RAG_EMBEDDING_PROVIDER: ${RAG_EMBEDDING_PROVIDER:-ollama}
+      RAG_EMBEDDING_MODEL: ${RAG_EMBEDDING_MODEL:-bge-m3}
+      RAG_OLLAMA_BASE_URL: http://ollama:11434
+    ports: []
+    networks: [internal]
+    volumes:
+      - rag-data:/app/data
+  web:
+    ports: []
+    networks: [internal]
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    networks: [internal]
+    volumes:
+      - ollama-models:/root/.ollama
+  caddy:
+    image: caddy:2.10-alpine
+    restart: unless-stopped
+    depends_on: [web]
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      RAG_DOMAIN: ${RAG_DOMAIN}
+      RAG_CADDY_BASIC_AUTH: ${RAG_CADDY_BASIC_AUTH}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    networks: [internal, public]
+
+networks:
+  internal:
+    internal: true
+  public:
+
+volumes:
+  rag-data:
+  ollama-models:
+  caddy-data:
+  caddy-config:
