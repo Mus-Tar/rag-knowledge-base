@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     chunk_overlap: int = Field(default=120, ge=0)
     llm_provider: Literal["fake", "openai", "ollama"] = "fake"
     llm_model: str = "qwen3:4b"
+    llm_thinking: Literal["enabled", "disabled"] = "disabled"
     openai_api_key: str | None = None
     openai_base_url: str | None = None
     ollama_base_url: str = "http://localhost:11434"
@@ -33,8 +34,12 @@ class Settings(BaseSettings):
     embedding_provider: Literal["lexical", "ollama", "openai"] = "lexical"
     embedding_model: str = "bge-m3"
     embedding_dimensions: int = Field(default=384, ge=8, le=4096)
-    reranker_provider: Literal["none", "lexical", "bge"] = "none"
+    embedding_api_key: str | None = None
+    embedding_base_url: str | None = None
+    reranker_provider: Literal["none", "lexical", "bge", "siliconflow"] = "none"
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
+    reranker_api_key: str | None = None
+    reranker_base_url: str | None = None
     query_rewrite_enabled: bool = True
     model_timeout_seconds: float = Field(default=60, gt=0, le=300)
     rate_limit_general: int = Field(default=120, ge=1)
@@ -48,6 +53,18 @@ class Settings(BaseSettings):
             raise ValueError("chunk_overlap must be smaller than chunk_size")
         if self.retrieval_candidate_k < self.retrieval_top_k:
             raise ValueError("retrieval_candidate_k must be at least retrieval_top_k")
+        has_embedding_api_key = bool(self.embedding_api_key and self.embedding_api_key.strip())
+        has_embedding_base_url = bool(self.embedding_base_url and self.embedding_base_url.strip())
+        if has_embedding_api_key != has_embedding_base_url:
+            raise ValueError("embedding_api_key and embedding_base_url must be configured together")
+        if self.reranker_provider == "siliconflow" and not (
+            self.reranker_api_key and self.reranker_api_key.strip()
+        ):
+            raise ValueError("reranker_api_key is required for the siliconflow reranker")
+        if self.reranker_provider == "siliconflow" and not (
+            self.reranker_base_url and self.reranker_base_url.strip()
+        ):
+            raise ValueError("reranker_base_url is required for the siliconflow reranker")
         return self
 
     @property

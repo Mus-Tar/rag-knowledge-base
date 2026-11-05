@@ -56,10 +56,12 @@ class OllamaEmbeddingProvider:
 
 class OpenAIEmbeddingProvider:
     def __init__(self, settings: Settings) -> None:
-        if not settings.openai_api_key:
-            raise RuntimeError("OpenAI Embedding 需要配置访问密钥")
-        self._api_key = settings.openai_api_key
-        self._base_url = (settings.openai_base_url or "https://api.openai.com/v1").rstrip("/")
+        self._api_key = settings.embedding_api_key or settings.openai_api_key
+        self._base_url = (
+            settings.embedding_base_url or settings.openai_base_url or "https://api.openai.com/v1"
+        ).rstrip("/")
+        if not self._api_key:
+            raise RuntimeError("OpenAI-compatible Embedding 需要配置访问密钥")
         self._model = settings.embedding_model
         self._timeout = settings.model_timeout_seconds
         self._dimensions: int | None = None

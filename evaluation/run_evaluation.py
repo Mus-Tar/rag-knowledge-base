@@ -2,6 +2,7 @@ import argparse
 import hashlib
 import json
 import math
+import os
 import platform
 import sys
 from datetime import UTC, datetime
@@ -134,6 +135,15 @@ def evaluate(*, api_url: str, web_url: str, dataset_path: Path) -> dict[str, Any
         "answer_total_ms": _latency_summary(total_latencies),
     }
     qa_keyword_pass_rate = round(qa_passes / len(query_results), 4)
+    llm_provider = os.environ.get("RAG_LLM_PROVIDER", "fake")
+    llm_model = os.environ.get("RAG_LLM_MODEL", "qwen3:4b")
+    embedding_provider = os.environ.get("RAG_EMBEDDING_PROVIDER", "lexical")
+    embedding_model = os.environ.get("RAG_EMBEDDING_MODEL", "bge-m3")
+    embedding_dimensions = int(os.environ.get("RAG_EMBEDDING_DIMENSIONS", "384"))
+    raw_index_version = f"{embedding_provider}-{embedding_model}-{embedding_dimensions}"
+    index_version = "".join(
+        character if character.isalnum() else "-" for character in raw_index_version
+    ).strip("-")
 
     return {
         "schema_version": 1,
@@ -145,8 +155,17 @@ def evaluate(*, api_url: str, web_url: str, dataset_path: Path) -> dict[str, Any
             "platform": platform.platform(),
             "api_url": api_url,
             "web_url": web_url,
-            "model_provider": "fake",
-            "retrieval_vector": "384-dimensional normalized lexical feature hash",
+            "llm_provider": llm_provider,
+            "llm_model": llm_model,
+            "embedding_provider": embedding_provider,
+            "embedding_model": embedding_model,
+            "embedding_dimensions": embedding_dimensions,
+            "index_version": index_version,
+            "model_provider": llm_provider,
+            "retrieval_vector": (
+                f"{embedding_dimensions}-dimensional {embedding_provider} embedding "
+                f"({embedding_model})"
+            ),
         },
         "dataset": {
             "name": dataset["name"],

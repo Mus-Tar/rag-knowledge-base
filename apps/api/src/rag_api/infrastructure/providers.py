@@ -90,6 +90,7 @@ def _create_chat_model(settings: Settings):
             model=settings.llm_model,
             streaming=True,
             timeout=settings.model_timeout_seconds,
+            extra_body={"thinking": {"type": settings.llm_thinking}},
         )
     if settings.llm_provider == "ollama":
         if not settings.llm_model:

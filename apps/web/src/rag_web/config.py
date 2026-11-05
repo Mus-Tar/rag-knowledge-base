@@ -14,7 +14,7 @@ class Settings(BaseSettings):
 
     app_env: Literal["development", "test", "production"] = "development"
     api_base_url: HttpUrl = HttpUrl("http://localhost:8000")
-    http_timeout_seconds: float = Field(default=5.0, gt=0, le=60)
+    http_timeout_seconds: float = Field(default=60.0, gt=0, le=300)
 
 
 @lru_cache
