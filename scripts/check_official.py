@@ -19,6 +19,7 @@ import fitz
 
 DEFAULT_DIR = Path("official_pdf/pdf")
 MANIFEST_PATH = Path("tests/fixtures/official/manifest.json")
+MIN_CORPUS_PAPERS = 35
 
 EXPECTED: dict[str, dict[str, Any]] = {
     "1706.03762v1.pdf": {
@@ -64,6 +65,10 @@ def page_count(path: Path) -> int:
         document.close()
 
 
+def corpus_count(directory: Path) -> int:
+    return sum(1 for path in directory.glob("*.pdf") if path.name not in EXPECTED)
+
+
 def validate(directory: Path) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     for name, expected in EXPECTED.items():
@@ -78,11 +83,17 @@ def validate(directory: Path) -> list[dict[str, Any]]:
             "status": "missing",
         }
         if path.is_file():
-            actual = {
+            actual: dict[str, Any] = {
                 "bytes": path.stat().st_size,
-                "pages": page_count(path),
+                "pages": None,
                 "sha256": sha256_file(path),
             }
+            try:
+                actual["pages"] = page_count(path)
+            except Exception as exc:  # corrupted/unreadable PDF must fail cleanly
+                row.update(actual=actual, status="unreadable", error=str(exc))
+                rows.append(row)
+                continue
             problems = [key for key in ("bytes", "pages", "sha256") if actual[key] != expected[key]]
             row.update(
                 actual=actual,
@@ -103,6 +114,35 @@ def print_report(rows: list[dict[str, Any]]) -> None:
         if row["status"] == "mismatch":
             for key in row["problems"]:
                 print(f"  {key}: expected {row['expected'][key]!r}, got {actual[key]!r}")
+        if row["status"] == "unreadable":
+            print(f"  unreadable: {row['error']}")
+
+
+def check_manifest(directory: Path) -> tuple[bool, str]:
+    if not MANIFEST_PATH.is_file():
+        return False, f"manifest missing: {MANIFEST_PATH}"
+    try:
+        payload = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return False, f"manifest unreadable: {exc}"
+    files = payload.get("files")
+    if not isinstance(files, list):
+        return False, "manifest has no files list"
+    by_name = {item.get("name"): item for item in files if isinstance(item, dict)}
+    for name, expected in EXPECTED.items():
+        item = by_name.get(name)
+        if not isinstance(item, dict):
+            return False, f"manifest missing {name}"
+        for key in ("role", "bytes", "pages", "sha256"):
+            if item.get(key) != expected[key]:
+                return False, f"manifest mismatch {name}.{key}"
+    actual_other = corpus_count(directory)
+    if payload.get("other_pdf_count") != actual_other:
+        return False, (
+            f"manifest other_pdf_count={payload.get('other_pdf_count')} "
+            f"but directory has {actual_other}"
+        )
+    return True, "manifest matches EXPECTED and corpus count"
 
 
 def write_manifest(directory: Path) -> None:
@@ -121,7 +161,7 @@ def write_manifest(directory: Path) -> None:
             }
             for name, expected in EXPECTED.items()
         ],
-        "other_pdf_count": sum(1 for path in directory.glob("*.pdf") if path.name not in EXPECTED),
+        "other_pdf_count": corpus_count(directory),
         "note": "PDFs are local-only and gitignored; this manifest is the committed evidence.",
     }
     MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -160,18 +200,26 @@ def main() -> int:
         print(f"directory not found: {args.dir}")
         return 1
     if args.inventory:
+        if not any(args.dir.glob("*.pdf")):
+            print(f"no PDFs found in {args.dir}")
+            return 1
         inventory(args.dir)
         return 0
 
     rows = validate(args.dir)
     print_report(rows)
-    ok = all(row["status"] == "ok" for row in rows)
-    if args.write_manifest:
-        if ok:
-            write_manifest(args.dir)
-        else:
-            print("manifest not written: fix the asset mismatches first")
-    return 0 if ok else 1
+    assets_ok = all(row["status"] == "ok" for row in rows)
+    if args.write_manifest and assets_ok:
+        write_manifest(args.dir)
+
+    other = corpus_count(args.dir)
+    corpus_ok = other >= MIN_CORPUS_PAPERS
+    print(
+        f"corpus: {other} other papers (min {MIN_CORPUS_PAPERS}) -> {'ok' if corpus_ok else 'FAIL'}"
+    )
+    manifest_ok, manifest_message = check_manifest(args.dir)
+    print(f"manifest: {manifest_message} -> {'ok' if manifest_ok else 'FAIL'}")
+    return 0 if assets_ok and corpus_ok and manifest_ok else 1
 
 
 if __name__ == "__main__":

@@ -34,7 +34,12 @@ uv run python scripts/accept_official.py --check-assets
 ```
 
 `--inventory` prints every PDF with its page count and SHA256; use it when
-you need the full corpus list.
+you need the full corpus list. It exits 1 if the directory has no PDFs.
+
+The checker also verifies that at least 35 other papers are present and
+that `manifest.json` matches the hard-coded `EXPECTED` records and the
+actual corpus count. If you deliberately change the corpus, run
+`--write-manifest` again and commit the new manifest.
 
 ## Caveats
 
