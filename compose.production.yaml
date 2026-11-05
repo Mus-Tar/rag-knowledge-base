@@ -1,26 +1,42 @@
 services:
   api:
+    restart: unless-stopped
     environment:
       RAG_APP_ENV: production
       RAG_DATA_DIR: /app/data
-      RAG_LLM_PROVIDER: ${RAG_LLM_PROVIDER:-ollama}
-      RAG_LLM_MODEL: ${RAG_LLM_MODEL:-qwen3:4b}
-      RAG_EMBEDDING_PROVIDER: ${RAG_EMBEDDING_PROVIDER:-ollama}
-      RAG_EMBEDDING_MODEL: ${RAG_EMBEDDING_MODEL:-bge-m3}
-      RAG_OLLAMA_BASE_URL: http://ollama:11434
-    ports: []
-    networks: [internal]
+      RAG_LLM_PROVIDER: ${RAG_LLM_PROVIDER:-openai}
+      RAG_LLM_MODEL: ${RAG_LLM_MODEL:-deepseek-chat}
+      RAG_LLM_THINKING: ${RAG_LLM_THINKING:-disabled}
+      RAG_OPENAI_API_KEY: ${RAG_OPENAI_API_KEY:-}
+      RAG_OPENAI_BASE_URL: ${RAG_OPENAI_BASE_URL:-https://api.deepseek.com}
+      RAG_EMBEDDING_PROVIDER: ${RAG_EMBEDDING_PROVIDER:-openai}
+      RAG_EMBEDDING_MODEL: ${RAG_EMBEDDING_MODEL:-BAAI/bge-m3}
+      RAG_EMBEDDING_DIMENSIONS: ${RAG_EMBEDDING_DIMENSIONS:-1024}
+      RAG_EMBEDDING_API_KEY: ${RAG_EMBEDDING_API_KEY:-}
+      RAG_EMBEDDING_BASE_URL: ${RAG_EMBEDDING_BASE_URL:-https://api.siliconflow.cn/v1}
+      RAG_RERANKER_PROVIDER: ${RAG_RERANKER_PROVIDER:-siliconflow}
+      RAG_RERANKER_MODEL: ${RAG_RERANKER_MODEL:-BAAI/bge-reranker-v2-m3}
+      RAG_RERANKER_API_KEY: ${RAG_RERANKER_API_KEY:-}
+      RAG_RERANKER_BASE_URL: ${RAG_RERANKER_BASE_URL:-https://api.siliconflow.cn/v1}
+      RAG_RETRIEVAL_CANDIDATE_K: ${RAG_RETRIEVAL_CANDIDATE_K:-12}
+      RAG_QUERY_REWRITE_ENABLED: ${RAG_QUERY_REWRITE_ENABLED:-true}
+      RAG_MODEL_TIMEOUT_SECONDS: ${RAG_MODEL_TIMEOUT_SECONDS:-60}
+      RAG_RATE_LIMIT_GENERAL: ${RAG_RATE_LIMIT_GENERAL:-120}
+      RAG_RATE_LIMIT_UPLOAD: ${RAG_RATE_LIMIT_UPLOAD:-12}
+      RAG_RATE_LIMIT_CHAT: ${RAG_RATE_LIMIT_CHAT:-30}
+      RAG_RATE_LIMIT_WINDOW_SECONDS: ${RAG_RATE_LIMIT_WINDOW_SECONDS:-60}
+    ports: !override []
+    networks: [internal, public]
     volumes:
       - rag-data:/app/data
   web:
-    ports: []
-    networks: [internal]
-  ollama:
-    image: ollama/ollama:latest
     restart: unless-stopped
+    environment:
+      RAG_APP_ENV: production
+      RAG_API_BASE_URL: http://api:8000
+      RAG_HTTP_TIMEOUT_SECONDS: ${RAG_HTTP_TIMEOUT_SECONDS:-60}
+    ports: !override []
     networks: [internal]
-    volumes:
-      - ollama-models:/root/.ollama
   caddy:
     image: caddy:2.10-alpine
     restart: unless-stopped
@@ -44,6 +60,5 @@ networks:
 
 volumes:
   rag-data:
-  ollama-models:
   caddy-data:
   caddy-config:
