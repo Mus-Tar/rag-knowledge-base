@@ -37,3 +37,7 @@ __pycache__/
 *.pyc
 .coverage
 htmlcov/
+
+# Official test PDFs: large and not redistributable; keep locally only
+official_pdf/
+tests/fixtures/official/*.pdf
